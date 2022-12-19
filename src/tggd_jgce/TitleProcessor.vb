@@ -1,5 +1,6 @@
 ﻿Friend Module TitleProcessor
     Friend Sub Run()
+        Console.Title = "Gift of SPLORR!!"
         AnsiConsole.Clear()
         Dim figlet As New FigletText("Gift of SPLORR!!") With {.Color = Color.Fuchsia, .Alignment = Justify.Center}
         AnsiConsole.Write(figlet)
