@@ -21,9 +21,45 @@
     Public Shared Function Create() As IWorld
         Dim worldData As New WorldData
         Dim world = New World(worldData)
-        'TODO: make stuff in the world
-        Dim playerCharacter = Character.Create(WorldData, world)
-        world.PlayerCharacter = playerCharacter
+        CreateOverworld(worldData, world)
+        CreatePlayerCharacter(worldData, world)
         Return world
     End Function
+    Private Const OverworldColumns = 8
+    Private Const OverworldRows = 8
+    Private Shared ReadOnly MazeDirections As IReadOnlyDictionary(Of Directions, MazeDirection(Of Directions)) =
+        New Dictionary(Of Directions, MazeDirection(Of Directions)) From
+        {
+            {Directions.North, New MazeDirection(Of Directions)(Directions.South, 0, -1)},
+            {Directions.East, New MazeDirection(Of Directions)(Directions.West, 1, 0)},
+            {Directions.South, New MazeDirection(Of Directions)(Directions.North, 0, 1)},
+            {Directions.West, New MazeDirection(Of Directions)(Directions.East, -1, 0)}
+        }
+    Private Shared Sub CreateOverworld(worldData As WorldData, world As World)
+        Dim maze As New Maze(Of Directions)(OverworldColumns, OverworldRows, MazeDirections)
+        maze.Generate()
+        Dim locations(OverworldColumns - 1, OverworldRows - 1) As ILocation
+        For column = 0 To OverworldColumns - 1
+            For row = 0 To OverworldRows - 1
+                locations(column, row) = Location.Create(worldData, world)
+            Next
+        Next
+        For column = 0 To OverworldColumns - 1
+            For row = 0 To OverworldRows - 1
+                Dim location = locations(column, row)
+                Dim cell = maze.GetCell(column, row)
+                For Each direction In MazeDirections.Keys
+                    If If(cell.GetDoor(direction)?.Open, False) Then
+                        Dim nextLocation = locations(column + CInt(MazeDirections(direction).DeltaX), row + CInt(MazeDirections(direction).DeltaY))
+                        Route.Create(worldData, world, location, direction, nextLocation)
+                    End If
+                Next
+            Next
+        Next
+    End Sub
+
+    Private Shared Sub CreatePlayerCharacter(worldData As WorldData, world As World)
+        Dim playerCharacter = Character.Create(worldData, world)
+        world.PlayerCharacter = playerCharacter
+    End Sub
 End Class

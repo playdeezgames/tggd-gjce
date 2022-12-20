@@ -12,7 +12,7 @@
         End Get
     End Property
     Friend Shared Function Create(worldData As WorldData, world As World) As ICharacter
-        Dim characterId = If(worldData.Characters.Any, worldData.Characters.Max(Function(x) x.Key), 0)
+        Dim characterId = If(worldData.Characters.Any, worldData.Characters.Keys.Max + 1, 0)
         worldData.Characters(characterId) = New CharacterData
         Return New Character(worldData, world, characterId)
     End Function
