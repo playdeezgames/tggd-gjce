@@ -10,6 +10,8 @@
                     If Not GameMenuProcessor.Run() Then
                         Exit Do
                     End If
+                Case MoveText
+                    MoveProcessor.Run(world)
             End Select
         Loop
     End Sub
@@ -29,6 +31,10 @@
     Private Sub ShowAliveStatus(world As IWorld, prompt As SelectionPrompt(Of String))
         AnsiConsole.MarkupLine("Yer totally alive!")
         Dim location = world.PlayerCharacter.Location
-        AnsiConsole.MarkupLine($"Exits: {String.Join(", ", location.Routes.Select(Function(x) x.Direction.Name))}")
+        Dim routes = location.Routes
+        If routes.Any Then
+            AnsiConsole.MarkupLine($"Exits: {String.Join(", ", routes.Select(Function(x) x.Direction.Name))}")
+            prompt.AddChoices(MoveText)
+        End If
     End Sub
 End Module

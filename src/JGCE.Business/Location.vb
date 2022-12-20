@@ -12,6 +12,15 @@
         End Get
     End Property
 
+    Public ReadOnly Property Route(direction As Directions) As IRoute Implements ILocation.Route
+        Get
+            If WorldData.Locations(Id).Routes.ContainsKey(direction) Then
+                Return New Route(WorldData, World, Id, direction)
+            End If
+            Return Nothing
+        End Get
+    End Property
+
     Friend Shared Function Create(worldData As WorldData, world As World) As ILocation
         Dim locationId = If(worldData.Locations.Any, worldData.Locations.Keys.Max + 1, 0)
         worldData.Locations(locationId) = New LocationData

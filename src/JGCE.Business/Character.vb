@@ -21,6 +21,19 @@
         End Set
     End Property
 
+    Public Sub AttemptMove(direction As Directions) Implements ICharacter.AttemptMove
+        Dim route = Location.Route(direction)
+        If route Is Nothing Then
+            AddMessage("You cannot go that way!")
+        End If
+        AddMessage($"You go {direction.Name}.")
+        Location = route.ToLocation
+    End Sub
+
+    Public Overridable Sub AddMessage(message As String) Implements ICharacter.AddMessage
+        'do nothing
+    End Sub
+
     Friend Shared Function Create(worldData As WorldData, world As World, location As ILocation) As ICharacter
         Dim characterId = If(worldData.Characters.Any, worldData.Characters.Keys.Max + 1, 0)
         worldData.Characters(characterId) = New CharacterData With {.LocationId = location.Id}
