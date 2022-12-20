@@ -885,6 +885,7 @@
       "JGCE.Business/1.0.0": {
         "dependencies": {
           "JGCE.Data": "1.0.0",
+          "SPLORR.Game": "1.0.0",
           "System.Text.Json": "7.0.1"
         },
         "runtime": {
@@ -894,6 +895,11 @@
       "JGCE.Data/1.0.0": {
         "runtime": {
           "JGCE.Data.dll": {}
+        }
+      },
+      "SPLORR.Game/1.0.0": {
+        "runtime": {
+          "SPLORR.Game.dll": {}
         }
       }
     }
@@ -950,6 +956,11 @@
       "sha512": ""
     },
     "JGCE.Data/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "SPLORR.Game/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
