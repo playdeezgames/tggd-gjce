@@ -11,9 +11,9 @@
             Return True
         End Get
     End Property
-    Friend Shared Function Create(worldData As WorldData, world As World) As ICharacter
+    Friend Shared Function Create(worldData As WorldData, world As World, location As ILocation) As ICharacter
         Dim characterId = If(worldData.Characters.Any, worldData.Characters.Keys.Max + 1, 0)
-        worldData.Characters(characterId) = New CharacterData
+        worldData.Characters(characterId) = New CharacterData With {.LocationId = location.Id}
         Return New Character(worldData, world, characterId)
     End Function
 End Class

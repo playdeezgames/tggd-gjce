@@ -27,6 +27,7 @@
     End Function
     Private Const OverworldColumns = 8
     Private Const OverworldRows = 8
+    Private Const ShortcutCount = 16
     Private Shared ReadOnly MazeDirections As IReadOnlyDictionary(Of Directions, MazeDirection(Of Directions)) =
         New Dictionary(Of Directions, MazeDirection(Of Directions)) From
         {
@@ -56,10 +57,24 @@
                 Next
             Next
         Next
+        Dim shortcuts = ShortcutCount
+        While shortcuts > 0
+            Dim column = RNG.FromRange(0, OverworldColumns - 1)
+            Dim row = RNG.FromRange(0, OverworldRows - 1)
+            Dim direction = RNG.FromEnumerable(MazeDirections.Keys)
+            Dim nextColumn = column + CInt(MazeDirections(direction).DeltaX)
+            Dim nextRow = row + CInt(MazeDirections(direction).DeltaY)
+            If nextColumn >= 0 AndAlso nextRow >= 0 AndAlso nextColumn < OverworldColumns AndAlso nextRow < OverworldRows Then
+                Route.Create(worldData, world, locations(column, row), direction, locations(nextColumn, nextRow))
+                Route.Create(worldData, world, locations(nextColumn, nextRow), MazeDirections(direction).Opposite, locations(column, row))
+                shortcuts -= 1
+            End If
+        End While
     End Sub
 
     Private Shared Sub CreatePlayerCharacter(worldData As WorldData, world As World)
-        Dim playerCharacter = Character.Create(worldData, world)
+        Dim location As ILocation = New Location(worldData, world, RNG.FromEnumerable(worldData.Locations.Keys))
+        Dim playerCharacter = Character.Create(worldData, world, location)
         world.PlayerCharacter = playerCharacter
     End Sub
 End Class
