@@ -41,7 +41,7 @@
         Dim location = world.PlayerCharacter.Location
         Dim routes = location.Routes
         If routes.Any Then
-            AnsiConsole.MarkupLine($"Exits: {String.Join(", ", routes.Select(Function(x) x.Direction.Name))}")
+            AnsiConsole.MarkupLine($"Exits: {String.Join(", ", routes.Select(Function(x) $"{x.RouteType.Name} going {x.Direction.Name}"))}")
             prompt.AddChoices(MoveText)
         End If
     End Sub

@@ -21,9 +21,18 @@
         End Get
     End Property
 
-    Friend Shared Function Create(worldData As WorldData, world As World) As ILocation
+    Public ReadOnly Property LocationType As LocationTypes Implements ILocation.LocationType
+        Get
+            Return CType(WorldData.Locations(Id).LocationType, LocationTypes)
+        End Get
+    End Property
+
+    Friend Shared Function Create(worldData As WorldData, world As World, locationType As LocationTypes) As ILocation
         Dim locationId = If(worldData.Locations.Any, worldData.Locations.Keys.Max + 1, 0)
-        worldData.Locations(locationId) = New LocationData
+        worldData.Locations(locationId) = New LocationData With
+            {
+                .LocationType = locationType
+            }
         Return New Location(worldData, world, locationId)
     End Function
 End Class

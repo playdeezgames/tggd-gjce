@@ -34,9 +34,13 @@
         'do nothing
     End Sub
 
-    Friend Shared Function Create(worldData As WorldData, world As World, location As ILocation) As ICharacter
+    Friend Shared Function Create(worldData As WorldData, world As World, location As ILocation, characterType As CharacterTypes) As ICharacter
         Dim characterId = If(worldData.Characters.Any, worldData.Characters.Keys.Max + 1, 0)
-        worldData.Characters(characterId) = New CharacterData With {.LocationId = location.Id}
+        worldData.Characters(characterId) = New CharacterData With
+            {
+                .LocationId = location.Id,
+                .CharacterType = characterType
+            }
         Return New Character(worldData, world, characterId)
     End Function
 End Class

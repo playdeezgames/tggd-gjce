@@ -24,10 +24,19 @@
         End Get
     End Property
 
+    Public ReadOnly Property Locations As IEnumerable(Of ILocation) Implements IWorld.Locations
+        Get
+            Return WorldData.Locations.Keys.Select(Function(x) New Location(WorldData, Me, x))
+        End Get
+    End Property
+
     Public Shared Function Create() As IWorld
         Dim worldData As New WorldData
         Dim world = New World(worldData)
         CreateOverworld(worldData, world)
+        'TODO: place home
+        'TODO: place shoppes
+        'TODO: place dungeons
         CreatePlayerCharacter(worldData, world)
         Return world
     End Function
@@ -48,7 +57,7 @@
         Dim locations(OverworldColumns - 1, OverworldRows - 1) As ILocation
         For column = 0 To OverworldColumns - 1
             For row = 0 To OverworldRows - 1
-                locations(column, row) = Location.Create(worldData, world)
+                locations(column, row) = Location.Create(worldData, world, LocationTypes.Overworld)
             Next
         Next
         For column = 0 To OverworldColumns - 1
@@ -58,7 +67,7 @@
                 For Each direction In MazeDirections.Keys
                     If If(cell.GetDoor(direction)?.Open, False) Then
                         Dim nextLocation = locations(column + CInt(MazeDirections(direction).DeltaX), row + CInt(MazeDirections(direction).DeltaY))
-                        Route.Create(worldData, world, location, direction, nextLocation)
+                        Route.Create(worldData, world, location, direction, nextLocation, RouteTypes.Street)
                     End If
                 Next
             Next
@@ -71,16 +80,16 @@
             Dim nextColumn = column + CInt(MazeDirections(direction).DeltaX)
             Dim nextRow = row + CInt(MazeDirections(direction).DeltaY)
             If nextColumn >= 0 AndAlso nextRow >= 0 AndAlso nextColumn < OverworldColumns AndAlso nextRow < OverworldRows Then
-                Route.Create(worldData, world, locations(column, row), direction, locations(nextColumn, nextRow))
-                Route.Create(worldData, world, locations(nextColumn, nextRow), MazeDirections(direction).Opposite, locations(column, row))
+                Route.Create(worldData, world, locations(column, row), direction, locations(nextColumn, nextRow), RouteTypes.Street)
+                Route.Create(worldData, world, locations(nextColumn, nextRow), MazeDirections(direction).Opposite, locations(column, row), RouteTypes.Street)
                 shortcuts -= 1
             End If
         End While
     End Sub
 
     Private Shared Sub CreatePlayerCharacter(worldData As WorldData, world As World)
-        Dim location As ILocation = New Location(worldData, world, RNG.FromEnumerable(worldData.Locations.Keys))
-        Dim playerCharacter = Character.Create(worldData, world, location)
+        Dim location As ILocation = RNG.FromEnumerable(world.Locations.Where(Function(x) x.LocationType = LocationTypes.Overworld))
+        Dim playerCharacter = Character.Create(worldData, world, location, CharacterTypes.Protagonist)
         world.PlayerCharacter = playerCharacter
     End Sub
 
