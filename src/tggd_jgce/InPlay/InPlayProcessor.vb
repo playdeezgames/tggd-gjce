@@ -39,6 +39,18 @@
     Private Sub ShowAliveStatus(world As IWorld, prompt As SelectionPrompt(Of String))
         AnsiConsole.MarkupLine("Yer totally alive!")
         Dim location = world.PlayerCharacter.Location
+        ShowCharacters(prompt, location)
+        ShowRoutes(prompt, location)
+    End Sub
+
+    Private Sub ShowCharacters(prompt As SelectionPrompt(Of String), location As ILocation)
+        Dim characters = location.Characters
+        If characters.Any Then
+            AnsiConsole.MarkupLine($"Characters: {String.Join(", ", characters.Select(Function(x) x.CharacterType.Name))}")
+        End If
+    End Sub
+
+    Private Sub ShowRoutes(prompt As SelectionPrompt(Of String), location As ILocation)
         Dim routes = location.Routes
         If routes.Any Then
             AnsiConsole.MarkupLine($"Exits: {String.Join(", ", routes.Select(Function(x) $"{x.RouteType.Name} going {x.Direction.Name}"))}")

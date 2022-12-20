@@ -1,4 +1,4 @@
 ﻿Public Enum LocationTypes
     Overworld
-    Home
+    House
 End Enum

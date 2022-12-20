@@ -21,6 +21,12 @@
         End Set
     End Property
 
+    Public ReadOnly Property CharacterType As CharacterTypes Implements ICharacter.CharacterType
+        Get
+            Return CType(WorldData.Characters(Id).CharacterType, CharacterTypes)
+        End Get
+    End Property
+
     Public Sub AttemptMove(direction As Directions) Implements ICharacter.AttemptMove
         Dim route = Location.Route(direction)
         If route Is Nothing Then

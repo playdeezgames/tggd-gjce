@@ -27,6 +27,12 @@
         End Get
     End Property
 
+    Public ReadOnly Property Characters As IEnumerable(Of ICharacter) Implements ILocation.Characters
+        Get
+            Return WorldData.Characters.Where(Function(x) x.Value.LocationId = Id).Select(Function(x) New Character(WorldData, World, x.Key))
+        End Get
+    End Property
+
     Friend Shared Function Create(worldData As WorldData, world As World, locationType As LocationTypes) As ILocation
         Dim locationId = If(worldData.Locations.Any, worldData.Locations.Keys.Max + 1, 0)
         worldData.Locations(locationId) = New LocationData With

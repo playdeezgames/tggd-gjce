@@ -4,4 +4,5 @@
     Property Location As ILocation
     Sub AttemptMove(direction As Directions)
     Sub AddMessage(message As String)
+    ReadOnly Property CharacterType As CharacterTypes
 End Interface

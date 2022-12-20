@@ -34,12 +34,27 @@
         Dim worldData As New WorldData
         Dim world = New World(worldData)
         CreateOverworld(worldData, world)
+        CreateHouse(worldData, world)
         'TODO: place home
         'TODO: place shoppes
         'TODO: place dungeons
+        CreateLoveInterest(worldData, world)
         CreatePlayerCharacter(worldData, world)
         Return world
     End Function
+
+    Private Shared Sub CreateLoveInterest(worldData As WorldData, world As World)
+        Dim location As ILocation = RNG.FromEnumerable(world.Locations.Where(Function(x) x.LocationType = LocationTypes.House))
+        Character.Create(worldData, world, location, CharacterTypes.LoveInterest)
+    End Sub
+
+    Private Shared Sub CreateHouse(worldData As WorldData, world As World)
+        Dim houseInterior = Location.Create(worldData, world, LocationTypes.House)
+        Dim houseExterior = RNG.FromEnumerable(world.Locations.Where(Function(x) x.LocationType = LocationTypes.Overworld AndAlso Not x.Routes.Any(Function(y) y.Direction = Directions.Inward)))
+        Route.Create(worldData, world, houseInterior, Directions.Outward, houseExterior, RouteTypes.Door)
+        Route.Create(worldData, world, houseExterior, Directions.Inward, houseInterior, RouteTypes.Door)
+    End Sub
+
     Private Const OverworldColumns = 8
     Private Const OverworldRows = 8
     Private Const ShortcutCount = 16
@@ -88,7 +103,7 @@
     End Sub
 
     Private Shared Sub CreatePlayerCharacter(worldData As WorldData, world As World)
-        Dim location As ILocation = RNG.FromEnumerable(world.Locations.Where(Function(x) x.LocationType = LocationTypes.Overworld))
+        Dim location As ILocation = RNG.FromEnumerable(world.Locations.Where(Function(x) x.LocationType = LocationTypes.House))
         Dim playerCharacter = Character.Create(worldData, world, location, CharacterTypes.Protagonist)
         world.PlayerCharacter = playerCharacter
     End Sub
