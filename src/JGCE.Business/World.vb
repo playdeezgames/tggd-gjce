@@ -18,6 +18,12 @@
         End Set
     End Property
 
+    Public ReadOnly Property Messages As IEnumerable(Of String) Implements IWorld.Messages
+        Get
+            Return WorldData.Messages
+        End Get
+    End Property
+
     Public Shared Function Create() As IWorld
         Dim worldData As New WorldData
         Dim world = New World(worldData)
@@ -76,5 +82,9 @@
         Dim location As ILocation = New Location(worldData, world, RNG.FromEnumerable(worldData.Locations.Keys))
         Dim playerCharacter = Character.Create(worldData, world, location)
         world.PlayerCharacter = playerCharacter
+    End Sub
+
+    Public Sub ClearMessages() Implements IWorld.ClearMessages
+        WorldData.Messages.Clear()
     End Sub
 End Class

@@ -6,5 +6,6 @@
     End Sub
     Public Overrides Sub AddMessage(message As String)
         MyBase.AddMessage(message)
+        WorldData.Messages.Add(message)
     End Sub
 End Class

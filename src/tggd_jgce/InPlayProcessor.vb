@@ -3,6 +3,7 @@
         Do
             AnsiConsole.Clear()
             Dim prompt As New SelectionPrompt(Of String) With {.Title = "[olive]Now What?[/]"}
+            ShowMessages(world)
             ShowStatus(world, prompt)
             prompt.AddChoice(GameMenuText)
             Select Case AnsiConsole.Prompt(prompt)
@@ -14,6 +15,13 @@
                     MoveProcessor.Run(world)
             End Select
         Loop
+    End Sub
+
+    Private Sub ShowMessages(world As IWorld)
+        For Each message In world.Messages
+            AnsiConsole.MarkupLine(message)
+        Next
+        world.ClearMessages()
     End Sub
 
     Private Sub ShowStatus(world As IWorld, prompt As SelectionPrompt(Of String))
