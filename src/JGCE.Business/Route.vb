@@ -2,7 +2,7 @@
     Inherits BaseThingie
     Implements IRoute
     Private ReadOnly FromLocationId As Integer
-    Public ReadOnly Property Direction As Directions
+    Public ReadOnly Property Direction As Directions Implements IRoute.Direction
 
     Public Sub New(worldData As WorldData, world As World, fromLocationId As Integer, direction As Directions)
         MyBase.New(worldData, world)

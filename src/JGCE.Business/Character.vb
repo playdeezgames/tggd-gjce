@@ -11,6 +11,16 @@
             Return True
         End Get
     End Property
+
+    Public Property Location As ILocation Implements ICharacter.Location
+        Get
+            Return New Location(WorldData, World, WorldData.Characters(Id).LocationId)
+        End Get
+        Set(value As ILocation)
+            WorldData.Characters(Id).LocationId = value.Id
+        End Set
+    End Property
+
     Friend Shared Function Create(worldData As WorldData, world As World, location As ILocation) As ICharacter
         Dim characterId = If(worldData.Characters.Any, worldData.Characters.Keys.Max + 1, 0)
         worldData.Characters(characterId) = New CharacterData With {.LocationId = location.Id}
