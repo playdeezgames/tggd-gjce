@@ -49,4 +49,8 @@
             }
         Return New Character(worldData, world, characterId)
     End Function
+
+    Public Function CanTalk(otherCharacter As ICharacter) As Boolean Implements ICharacter.CanTalk
+        Return CharacterType.CanTalk(Me, otherCharacter)
+    End Function
 End Class

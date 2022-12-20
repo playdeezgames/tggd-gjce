@@ -38,15 +38,19 @@
 
     Private Sub ShowAliveStatus(world As IWorld, prompt As SelectionPrompt(Of String))
         AnsiConsole.MarkupLine("Yer totally alive!")
-        Dim location = world.PlayerCharacter.Location
-        ShowCharacters(prompt, location)
+        Dim character = world.PlayerCharacter
+        Dim location = character.Location
+        ShowCharacters(prompt, location, character)
         ShowRoutes(prompt, location)
     End Sub
 
-    Private Sub ShowCharacters(prompt As SelectionPrompt(Of String), location As ILocation)
+    Private Sub ShowCharacters(prompt As SelectionPrompt(Of String), location As ILocation, playerCharacter As ICharacter)
         Dim characters = location.Characters
         If characters.Any Then
             AnsiConsole.MarkupLine($"Characters: {String.Join(", ", characters.Select(Function(x) x.CharacterType.Name))}")
+            If characters.Any(Function(x) playerCharacter.CanTalk(x)) Then
+                prompt.AddChoice(TalkText)
+            End If
         End If
     End Sub
 
