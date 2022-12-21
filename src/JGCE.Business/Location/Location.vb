@@ -33,6 +33,10 @@
         End Get
     End Property
 
+    Public Sub AddItem(item As IItem) Implements ILocation.AddItem
+        WorldData.Locations(Id).ItemIds.Add(item.Id)
+    End Sub
+
     Friend Shared Function Create(worldData As WorldData, world As World, locationType As LocationTypes) As ILocation
         Dim locationId = If(worldData.Locations.Any, worldData.Locations.Keys.Max + 1, 0)
         worldData.Locations(locationId) = New LocationData With

@@ -53,6 +53,8 @@
         Dim houseExterior = RNG.FromEnumerable(world.Locations.Where(Function(x) x.LocationType = LocationTypes.Overworld AndAlso Not x.Routes.Any(Function(y) y.Direction = Directions.Inward)))
         Route.Create(worldData, world, houseInterior, Directions.Outward, houseExterior, RouteTypes.Door)
         Route.Create(worldData, world, houseExterior, Directions.Inward, houseInterior, RouteTypes.Door)
+        Dim gift As IItem = Item.Create(worldData, world, ItemTypes.Gift)
+        houseInterior.AddItem(gift)
     End Sub
 
     Private Const OverworldColumns = 8

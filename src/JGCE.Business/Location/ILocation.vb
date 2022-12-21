@@ -4,4 +4,5 @@
     ReadOnly Property Route(direction As Directions) As IRoute
     ReadOnly Property LocationType As LocationTypes
     ReadOnly Property Characters As IEnumerable(Of ICharacter)
+    Sub AddItem(item As IItem)
 End Interface

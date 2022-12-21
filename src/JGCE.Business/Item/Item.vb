@@ -11,4 +11,10 @@
             Return CType(WorldData.Items(Id).ItemType, ItemTypes)
         End Get
     End Property
+
+    Friend Shared Function Create(worldData As WorldData, world As World, itemType As ItemTypes) As IItem
+        Dim itemId = If(worldData.Items.Any, worldData.Items.Keys.Max + 1, 0)
+        worldData.Items(itemId) = New ItemData With {.ItemType = itemType}
+        Return New Item(worldData, world, itemId)
+    End Function
 End Class
