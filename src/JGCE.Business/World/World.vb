@@ -61,8 +61,8 @@
         Route.Create(worldData, world, houseExterior, Directions.Inward, houseInterior, RouteTypes.Door)
     End Sub
 
-    Private Const OverworldColumns = 8
-    Private Const OverworldRows = 8
+    Private Const OverworldColumns = 6
+    Private Const OverworldRows = 6
     Private Const ShortcutCount = 16
     Private Shared ReadOnly MazeDirections As IReadOnlyDictionary(Of Directions, MazeDirection(Of Directions)) =
         New Dictionary(Of Directions, MazeDirection(Of Directions)) From
