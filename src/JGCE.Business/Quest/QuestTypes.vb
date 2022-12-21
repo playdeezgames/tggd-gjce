@@ -30,4 +30,19 @@ Public Module QuestTypesExtensions
     Friend Sub OnStart(questType As QuestTypes, character As ICharacter)
         _onStart(questType)(character)
     End Sub
+    Private ReadOnly _onComplete As IReadOnlyDictionary(Of QuestTypes, Action(Of ICharacter)) =
+        New Dictionary(Of QuestTypes, Action(Of ICharacter)) From
+        {
+            {QuestTypes.MainQuest, AddressOf MainQuestOnComplete}
+        }
+
+    Private Sub MainQuestOnComplete(character As ICharacter)
+        character.AddMessage("""Thanks! It was exactly what I hoped for!""")
+        character.AddMessage("""Sorry I didn't get you anything in return! I forgot.""")
+    End Sub
+
+    <Extension>
+    Friend Sub OnComplete(questType As QuestTypes, character As ICharacter)
+        _onComplete(questType)(character)
+    End Sub
 End Module

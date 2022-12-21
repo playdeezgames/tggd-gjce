@@ -53,11 +53,30 @@
     Public Sub Complete(questType As QuestTypes) Implements ICharacter.Complete
         WorldData.Characters(Id).StartedQuestTypes.Remove(questType)
         WorldData.Characters(Id).CompletedQuestTypes.Add(questType)
+        questType.OnComplete(Me)
     End Sub
 
     Public Sub Start(questType As QuestTypes) Implements ICharacter.Start
         WorldData.Characters(Id).StartedQuestTypes.Add(questType)
         questType.OnStart(Me)
+    End Sub
+
+    Public Sub AttemptTake(items As IEnumerable(Of IItem)) Implements ICharacter.AttemptTake
+        For Each item In items
+            AttemptTakeOne(item)
+        Next
+    End Sub
+
+    Private Sub AttemptTakeOne(item As IItem)
+        If Location.HasItem(item) Then
+            AddMessage($"You take {item.ItemType.Name}.")
+            Location.RemoveItem(item)
+            AddItem(item)
+        End If
+    End Sub
+
+    Private Sub AddItem(item As IItem)
+        WorldData.Characters(Id).ItemIds.Add(item.Id)
     End Sub
 
     Friend Shared Function Create(worldData As WorldData, world As World, location As ILocation, characterType As CharacterTypes) As ICharacter

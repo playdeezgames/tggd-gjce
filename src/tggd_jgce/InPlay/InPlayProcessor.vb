@@ -1,4 +1,6 @@
-﻿Module InPlayProcessor
+﻿Imports System.Runtime.Serialization
+
+Module InPlayProcessor
     Friend Sub Run(world As IWorld)
         Do
             AnsiConsole.Clear()
@@ -11,6 +13,8 @@
                     If Not GameMenuProcessor.Run() Then
                         Exit Do
                     End If
+                Case GroundText
+                    GroundProcessor.Run(world)
                 Case MoveText
                     MoveProcessor.Run(world)
                 Case TalkText
@@ -44,6 +48,14 @@
         Dim location = character.Location
         ShowCharacters(prompt, location, character)
         ShowRoutes(prompt, location)
+        ShowGround(prompt, location)
+    End Sub
+
+    Private Sub ShowGround(prompt As SelectionPrompt(Of String), location As ILocation)
+        If location.HasItems Then
+            AnsiConsole.MarkupLine("There are items on the ground.")
+            prompt.AddChoice(GroundText)
+        End If
     End Sub
 
     Private Sub ShowCharacters(prompt As SelectionPrompt(Of String), location As ILocation, playerCharacter As ICharacter)

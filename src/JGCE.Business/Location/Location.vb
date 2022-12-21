@@ -45,4 +45,24 @@
             }
         Return New Location(worldData, world, locationId)
     End Function
+
+    Public Function HasItem(item As IItem) As Boolean Implements ILocation.HasItem
+        Return WorldData.Locations(Id).ItemIds.Contains(item.Id)
+    End Function
+
+    Public Sub RemoveItem(item As IItem) Implements ILocation.RemoveItem
+        WorldData.Locations(Id).ItemIds.Remove(item.Id)
+    End Sub
+
+    Public ReadOnly Property HasItems() As Boolean Implements ILocation.HasItems
+        Get
+            Return WorldData.Locations(Id).ItemIds.Any
+        End Get
+    End Property
+
+    Public ReadOnly Property Items As IEnumerable(Of IItem) Implements ILocation.Items
+        Get
+            Return WorldData.Locations(Id).ItemIds.Select(Function(x) New Item(WorldData, World, x))
+        End Get
+    End Property
 End Class

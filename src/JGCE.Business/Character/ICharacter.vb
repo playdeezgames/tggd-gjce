@@ -12,6 +12,7 @@
     Function HasItemType(itemType As ItemTypes) As Boolean
     Sub Complete(questType As QuestTypes)
     Sub Start(questType As QuestTypes)
+    Sub AttemptTake(items As IEnumerable(Of IItem))
     ReadOnly Property CharacterType As CharacterTypes
     ReadOnly Property Items As IEnumerable(Of IItem)
 End Interface
