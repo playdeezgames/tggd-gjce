@@ -13,6 +13,8 @@
                     End If
                 Case MoveText
                     MoveProcessor.Run(world)
+                Case TalkText
+                    TalkProcessor.Run(world)
             End Select
         Loop
     End Sub

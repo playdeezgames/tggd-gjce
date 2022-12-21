@@ -25,9 +25,36 @@ Public Module CharacterTypesExtensions
     End Function
     <Extension>
     Public Function CanTalk(characterType As CharacterTypes, fromCharacter As ICharacter, toCharacter As ICharacter) As Boolean
-        If _canTalk.ContainsKey(characterType) Then
-            Return _canTalk(characterType)(fromCharacter, toCharacter)
-        End If
-        Return False
+        Return _canTalk(characterType)(fromCharacter, toCharacter)
     End Function
+    Private ReadOnly _talk As IReadOnlyDictionary(Of CharacterTypes, Action(Of ICharacter, ICharacter)) =
+        New Dictionary(Of CharacterTypes, Action(Of ICharacter, ICharacter)) From
+        {
+            {CharacterTypes.Protagonist, AddressOf ProtagonistTalk}
+        }
+    Private Sub ProtagonistTalk(fromCharacter As ICharacter, toCharacter As ICharacter)
+        Select Case toCharacter.CharacterType
+            Case CharacterTypes.LoveInterest
+                ProtagonistTalkLoveInterest(fromCharacter, toCharacter)
+            Case Else
+                Throw New NotImplementedException
+        End Select
+    End Sub
+    Private Sub ProtagonistTalkLoveInterest(fromCharacter As ICharacter, toCharacter As ICharacter)
+        If fromCharacter.HasCompleted(QuestTypes.MainQuest) Then
+            fromCharacter.AddMessage("Thank you for the lovely gift!")
+        ElseIf fromCharacter.CanComplete(QuestTypes.MainQuest) Then
+            fromCharacter.Complete(QuestTypes.MainQuest)
+        ElseIf fromCharacter.HasStarted(QuestTypes.MainQuest) Then
+            fromCharacter.AddMessage("I can't wait to see what you got me!")
+        Else
+            fromCharacter.Start(QuestTypes.MainQuest)
+        End If
+    End Sub
+    <Extension>
+    Public Sub Talk(characterType As CharacterTypes, fromCharacter As ICharacter, toCharacter As ICharacter)
+        If characterType.CanTalk(fromCharacter, toCharacter) Then
+            _talk(characterType)(fromCharacter, toCharacter)
+        End If
+    End Sub
 End Module
