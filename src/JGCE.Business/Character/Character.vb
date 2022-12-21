@@ -33,6 +33,30 @@
         End Get
     End Property
 
+    Public ReadOnly Property HasQuests As Boolean Implements ICharacter.HasQuests
+        Get
+            Return WorldData.Characters(Id).StartedQuestTypes.Any OrElse WorldData.Characters(Id).CompletedQuestTypes.Any
+        End Get
+    End Property
+
+    Public ReadOnly Property HasItems As Boolean Implements ICharacter.HasItems
+        Get
+            Return WorldData.Characters(Id).ItemIds.Any
+        End Get
+    End Property
+
+    Public ReadOnly Property StartedQuests As IEnumerable(Of QuestTypes) Implements ICharacter.StartedQuests
+        Get
+            Return WorldData.Characters(Id).StartedQuestTypes.Select(Function(x) CType(x, QuestTypes))
+        End Get
+    End Property
+
+    Public ReadOnly Property CompletedQuests As IEnumerable(Of QuestTypes) Implements ICharacter.CompletedQuests
+        Get
+            Return WorldData.Characters(Id).CompletedQuestTypes.Select(Function(x) CType(x, QuestTypes))
+        End Get
+    End Property
+
     Public Sub AttemptMove(direction As Directions) Implements ICharacter.AttemptMove
         Dim route = Location.Route(direction)
         If route Is Nothing Then

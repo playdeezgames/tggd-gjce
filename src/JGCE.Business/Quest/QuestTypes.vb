@@ -45,4 +45,13 @@ Public Module QuestTypesExtensions
     Friend Sub OnComplete(questType As QuestTypes, character As ICharacter)
         _onComplete(questType)(character)
     End Sub
+    Private ReadOnly _names As IReadOnlyDictionary(Of QuestTypes, String) =
+        New Dictionary(Of QuestTypes, String) From
+        {
+            {QuestTypes.MainQuest, "Acquire a gift for yer love interest."}
+        }
+    <Extension>
+    Public Function Name(questType As QuestTypes) As String
+        Return _names(questType)
+    End Function
 End Module

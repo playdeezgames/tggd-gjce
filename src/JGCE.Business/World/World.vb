@@ -35,13 +35,19 @@
         Dim world = New World(worldData)
         CreateOverworld(worldData, world)
         CreateHouse(worldData, world)
-        'TODO: place home
         'TODO: place shoppes
         'TODO: place dungeons
         CreateLoveInterest(worldData, world)
         CreatePlayerCharacter(worldData, world)
+        SpawnGift(worldData, world) 'TODO: once a gift is craftable, don't spawn the gift
         Return world
     End Function
+
+    Private Shared Sub SpawnGift(worldData As WorldData, world As World)
+        Dim location = RNG.FromEnumerable(world.Locations.Where(Function(x) x.LocationType = LocationTypes.House))
+        Dim gift As IItem = Item.Create(worldData, world, ItemTypes.Gift)
+        location.AddItem(gift)
+    End Sub
 
     Private Shared Sub CreateLoveInterest(worldData As WorldData, world As World)
         Dim location As ILocation = RNG.FromEnumerable(world.Locations.Where(Function(x) x.LocationType = LocationTypes.House))
@@ -53,8 +59,6 @@
         Dim houseExterior = RNG.FromEnumerable(world.Locations.Where(Function(x) x.LocationType = LocationTypes.Overworld AndAlso Not x.Routes.Any(Function(y) y.Direction = Directions.Inward)))
         Route.Create(worldData, world, houseInterior, Directions.Outward, houseExterior, RouteTypes.Door)
         Route.Create(worldData, world, houseExterior, Directions.Inward, houseInterior, RouteTypes.Door)
-        Dim gift As IItem = Item.Create(worldData, world, ItemTypes.Gift)
-        houseInterior.AddItem(gift)
     End Sub
 
     Private Const OverworldColumns = 8

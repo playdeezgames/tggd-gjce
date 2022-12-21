@@ -15,8 +15,12 @@ Module InPlayProcessor
                     End If
                 Case GroundText
                     GroundProcessor.Run(world)
+                Case InventoryText
+                    InventoryProcessor.Run(world)
                 Case MoveText
                     MoveProcessor.Run(world)
+                Case QuestsText
+                    QuestsProcessor.Run(world)
                 Case TalkText
                     TalkProcessor.Run(world)
             End Select
@@ -49,6 +53,12 @@ Module InPlayProcessor
         ShowCharacters(prompt, location, character)
         ShowRoutes(prompt, location)
         ShowGround(prompt, location)
+        If character.HasQuests Then
+            prompt.AddChoice(QuestsText)
+        End If
+        If character.HasItems Then
+            prompt.AddChoice(InventoryText)
+        End If
     End Sub
 
     Private Sub ShowGround(prompt As SelectionPrompt(Of String), location As ILocation)
