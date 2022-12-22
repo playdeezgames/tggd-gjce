@@ -50,6 +50,7 @@ Module InPlayProcessor
         AnsiConsole.MarkupLine("Yer totally alive!")
         Dim character = world.PlayerCharacter
         Dim location = character.Location
+        ShowDungeonStatus(location)
         ShowCharacters(prompt, location, character)
         ShowRoutes(prompt, location)
         ShowGround(prompt, location)
@@ -58,6 +59,13 @@ Module InPlayProcessor
         End If
         If character.HasItems Then
             prompt.AddChoice(InventoryText)
+        End If
+    End Sub
+
+    Private Sub ShowDungeonStatus(location As ILocation)
+        Dim dungeonType = location.DungeonType
+        If dungeonType <> DungeonTypes.None Then
+            AnsiConsole.MarkupLine($"Dungeon: {location.DungeonType.Name}")
         End If
     End Sub
 

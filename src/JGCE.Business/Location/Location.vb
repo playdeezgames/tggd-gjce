@@ -37,11 +37,12 @@
         WorldData.Locations(Id).ItemIds.Add(item.Id)
     End Sub
 
-    Friend Shared Function Create(worldData As WorldData, world As World, locationType As LocationTypes) As ILocation
+    Friend Shared Function Create(worldData As WorldData, world As World, locationType As LocationTypes, dungeonType As DungeonTypes) As ILocation
         Dim locationId = If(worldData.Locations.Any, worldData.Locations.Keys.Max + 1, 0)
         worldData.Locations(locationId) = New LocationData With
             {
-                .LocationType = locationType
+                .LocationType = locationType,
+                .DungeonType = dungeonType
             }
         Return New Location(worldData, world, locationId)
     End Function
@@ -63,6 +64,12 @@
     Public ReadOnly Property Items As IEnumerable(Of IItem) Implements ILocation.Items
         Get
             Return WorldData.Locations(Id).ItemIds.Select(Function(x) New Item(WorldData, World, x))
+        End Get
+    End Property
+
+    Public ReadOnly Property DungeonType As DungeonTypes Implements ILocation.DungeonType
+        Get
+            Return CType(WorldData.Locations(Id).DungeonType, DungeonTypes)
         End Get
     End Property
 End Class

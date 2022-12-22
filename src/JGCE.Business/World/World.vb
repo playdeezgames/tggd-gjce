@@ -36,12 +36,46 @@
         CreateOverworld(worldData, world)
         CreateHouse(worldData, world)
         'TODO: place shoppes
-        'TODO: place dungeons
+        CreateDungeons(worldData, world)
         CreateLoveInterest(worldData, world)
         CreatePlayerCharacter(worldData, world)
         SpawnGift(worldData, world) 'TODO: once a gift is craftable, don't spawn the gift
         Return world
     End Function
+    Private Shared ReadOnly AllDungeons As IReadOnlyList(Of DungeonTypes) = New List(Of DungeonTypes) From {DungeonTypes.Paper, DungeonTypes.Cardboard, DungeonTypes.Tape, DungeonTypes.Ribbon, DungeonTypes.Macguffin}
+    Private Shared Sub CreateDungeons(worldData As WorldData, world As World)
+        For Each dungeon In AllDungeons
+            Dim dungeonEntrance = RNG.FromEnumerable(world.Locations.Where(Function(x) x.LocationType = LocationTypes.Overworld AndAlso Not x.Routes.Any(Function(y) y.Direction = Directions.Down)))
+            CreateDungeon(worldData, world, dungeon, dungeonEntrance)
+        Next
+    End Sub
+    Private Const DungeonColumns = 4
+    Private Const DungeonRows = 4
+    Private Shared Sub CreateDungeon(worldData As WorldData, world As World, dungeon As DungeonTypes, dungeonEntrance As ILocation)
+        Dim maze As New Maze(Of Directions)(DungeonColumns, DungeonRows, MazeDirections)
+        maze.Generate()
+        Dim locations(DungeonColumns - 1, DungeonRows - 1) As ILocation
+        For column = 0 To DungeonColumns - 1
+            For row = 0 To DungeonRows - 1
+                locations(column, row) = Location.Create(worldData, world, LocationTypes.Dungeon, dungeon)
+            Next
+        Next
+        For column = 0 To DungeonColumns - 1
+            For row = 0 To DungeonRows - 1
+                Dim location = locations(column, row)
+                Dim cell = maze.GetCell(column, row)
+                For Each direction In MazeDirections.Keys
+                    If If(cell.GetDoor(direction)?.Open, False) Then
+                        Dim nextLocation = locations(column + CInt(MazeDirections(direction).DeltaX), row + CInt(MazeDirections(direction).DeltaY))
+                        Route.Create(worldData, world, location, direction, nextLocation, RouteTypes.DungeonCorridor)
+                    End If
+                Next
+            Next
+        Next
+        Dim dungeonExit As ILocation = locations(RNG.FromRange(0, DungeonColumns - 1), RNG.FromRange(0, DungeonRows - 1))
+        Route.Create(worldData, world, dungeonEntrance, Directions.Down, dungeonExit, RouteTypes.Stairs)
+        Route.Create(worldData, world, dungeonExit, Directions.Down, dungeonEntrance, RouteTypes.Stairs)
+    End Sub
 
     Private Shared Sub SpawnGift(worldData As WorldData, world As World)
         Dim location = RNG.FromEnumerable(world.Locations.Where(Function(x) x.LocationType = LocationTypes.House))
@@ -55,7 +89,7 @@
     End Sub
 
     Private Shared Sub CreateHouse(worldData As WorldData, world As World)
-        Dim houseInterior = Location.Create(worldData, world, LocationTypes.House)
+        Dim houseInterior = Location.Create(worldData, world, LocationTypes.House, DungeonTypes.None)
         Dim houseExterior = RNG.FromEnumerable(world.Locations.Where(Function(x) x.LocationType = LocationTypes.Overworld AndAlso Not x.Routes.Any(Function(y) y.Direction = Directions.Inward)))
         Route.Create(worldData, world, houseInterior, Directions.Outward, houseExterior, RouteTypes.Door)
         Route.Create(worldData, world, houseExterior, Directions.Inward, houseInterior, RouteTypes.Door)
@@ -78,7 +112,7 @@
         Dim locations(OverworldColumns - 1, OverworldRows - 1) As ILocation
         For column = 0 To OverworldColumns - 1
             For row = 0 To OverworldRows - 1
-                locations(column, row) = Location.Create(worldData, world, LocationTypes.Overworld)
+                locations(column, row) = Location.Create(worldData, world, LocationTypes.Overworld, DungeonTypes.None)
             Next
         Next
         For column = 0 To OverworldColumns - 1
