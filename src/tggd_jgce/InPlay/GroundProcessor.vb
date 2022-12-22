@@ -2,6 +2,8 @@
     Friend Sub Run(world As IWorld)
         Dim location = world.PlayerCharacter.Location
         Do
+            AnsiConsole.Clear()
+            ShowMessages(world)
             Dim itemGroups = location.Items.GroupBy(Function(x) x.ItemType)
             Dim prompt As New SelectionPrompt(Of String) With {.Title = "[olive]On the Ground:[/]"}
             prompt.AddChoice(GoBackText)
@@ -18,6 +20,9 @@
                     quantity = Math.Clamp(quantity, 0, itemGroup.Count)
                     Dim items = itemGroup.Take(quantity)
                     world.PlayerCharacter.AttemptTake(items)
+                    If Not location.HasItems Then
+                        Exit Do
+                    End If
             End Select
         Loop
     End Sub

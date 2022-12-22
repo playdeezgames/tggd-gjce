@@ -57,6 +57,12 @@
         End Get
     End Property
 
+    Public ReadOnly Property ItemsOfType(itemType As ItemTypes) As IEnumerable(Of IItem) Implements ICharacter.ItemsOfType
+        Get
+            Return Items.Where(Function(x) x.ItemType = itemType)
+        End Get
+    End Property
+
     Public Sub AttemptMove(direction As Directions) Implements ICharacter.AttemptMove
         Dim route = Location.Route(direction)
         If route Is Nothing Then
@@ -90,6 +96,28 @@
             AttemptTakeOne(item)
         Next
     End Sub
+
+    Public Sub AttemptDrop(items As IEnumerable(Of IItem)) Implements ICharacter.AttemptDrop
+        For Each item In items
+            AttemptDropOne(item)
+        Next
+    End Sub
+
+    Private Sub AttemptDropOne(item As IItem)
+        If HasItem(item) Then
+            AddMessage($"You Drop {item.ItemType.Name}.")
+            Location.AddItem(item)
+            RemoveItem(item)
+        End If
+    End Sub
+
+    Private Sub RemoveItem(item As IItem)
+        WorldData.Characters(Id).ItemIds.Remove(item.Id)
+    End Sub
+
+    Private Function HasItem(item As IItem) As Boolean
+        Return WorldData.Characters(Id).ItemIds.Contains(item.Id)
+    End Function
 
     Private Sub AttemptTakeOne(item As IItem)
         If Location.HasItem(item) Then

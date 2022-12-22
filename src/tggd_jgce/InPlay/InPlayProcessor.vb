@@ -27,7 +27,7 @@ Module InPlayProcessor
         Loop
     End Sub
 
-    Private Sub ShowMessages(world As IWorld)
+    Friend Sub ShowMessages(world As IWorld)
         For Each message In world.Messages
             AnsiConsole.MarkupLine(message)
         Next

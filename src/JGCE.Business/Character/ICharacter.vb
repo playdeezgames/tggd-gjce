@@ -13,6 +13,8 @@
     Sub Complete(questType As QuestTypes)
     Sub Start(questType As QuestTypes)
     Sub AttemptTake(items As IEnumerable(Of IItem))
+    Sub AttemptDrop(items As IEnumerable(Of IItem))
+    ReadOnly Property ItemsOfType(itemType As ItemTypes) As IEnumerable(Of IItem)
     ReadOnly Property HasQuests As Boolean
     ReadOnly Property HasItems As Boolean
     ReadOnly Property CharacterType As CharacterTypes

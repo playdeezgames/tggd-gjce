@@ -44,7 +44,7 @@
     End Function
 
     Private Shared Sub SpawnGift(worldData As WorldData, world As World)
-        Dim location = RNG.FromEnumerable(world.Locations.Where(Function(x) x.LocationType = LocationTypes.Overworld))
+        Dim location = RNG.FromEnumerable(world.Locations.Where(Function(x) x.LocationType = LocationTypes.House))
         Dim gift As IItem = Item.Create(worldData, world, ItemTypes.Gift)
         location.AddItem(gift)
     End Sub

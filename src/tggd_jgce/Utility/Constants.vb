@@ -1,5 +1,6 @@
 ﻿Friend Module Constants
     Friend Const AbandonGameText = "Abandon Game"
+    Friend Const DropText = "Drop"
     Friend Const GameMenuText = "Game Menu"
     Friend Const GoBackText = "Go Back"
     Friend Const GroundText = "Ground"
