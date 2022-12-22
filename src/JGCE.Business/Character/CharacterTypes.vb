@@ -3,13 +3,23 @@
 Public Enum CharacterTypes
     Protagonist
     LoveInterest
+    WrappingPaperRat
+    RibbonSnake
+    CardboardGoblin
+    TapeSpider
+    GiftBats
 End Enum
 Public Module CharacterTypesExtensions
     Private ReadOnly _names As IReadOnlyDictionary(Of CharacterTypes, String) =
         New Dictionary(Of CharacterTypes, String) From
         {
             {CharacterTypes.Protagonist, "you"},
-            {CharacterTypes.LoveInterest, "yer love interest"}
+            {CharacterTypes.LoveInterest, "yer love interest"},
+            {CharacterTypes.TapeSpider, "tape spider"},
+            {CharacterTypes.RibbonSnake, "ribbon snake"},
+            {CharacterTypes.WrappingPaperRat, "wrapping paper rat"},
+            {CharacterTypes.GiftBats, "gift bats"},
+            {CharacterTypes.CardboardGoblin, "cardboard goblin"}
         }
     <Extension>
     Public Function Name(characterType As CharacterTypes) As String

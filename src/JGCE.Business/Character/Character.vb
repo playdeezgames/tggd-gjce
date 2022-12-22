@@ -2,7 +2,7 @@
     Inherits Thingie
     Implements ICharacter
 
-    Public Sub New(worldData As WorldData, world As World, id As Integer)
+    Public Sub New(worldData As WorldData, world As IWorld, id As Integer)
         MyBase.New(worldData, world, id)
     End Sub
 
@@ -18,6 +18,7 @@
         End Get
         Set(value As ILocation)
             WorldData.Characters(Id).LocationId = value.Id
+            Location.OnEnter(Me)
         End Set
     End Property
 
@@ -131,7 +132,7 @@
         WorldData.Characters(Id).ItemIds.Add(item.Id)
     End Sub
 
-    Friend Shared Function Create(worldData As WorldData, world As World, location As ILocation, characterType As CharacterTypes) As ICharacter
+    Friend Shared Function Create(worldData As WorldData, world As IWorld, location As ILocation, characterType As CharacterTypes) As ICharacter
         Dim characterId = If(worldData.Characters.Any, worldData.Characters.Keys.Max + 1, 0)
         worldData.Characters(characterId) = New CharacterData With
             {

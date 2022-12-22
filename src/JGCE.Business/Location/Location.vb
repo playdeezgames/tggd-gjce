@@ -2,7 +2,7 @@
     Inherits Thingie
     Implements ILocation
 
-    Public Sub New(worldData As WorldData, world As World, id As Integer)
+    Public Sub New(worldData As WorldData, world As IWorld, id As Integer)
         MyBase.New(worldData, world, id)
     End Sub
 
@@ -53,6 +53,10 @@
 
     Public Sub RemoveItem(item As IItem) Implements ILocation.RemoveItem
         WorldData.Locations(Id).ItemIds.Remove(item.Id)
+    End Sub
+
+    Public Sub OnEnter(character As Character) Implements ILocation.OnEnter
+        LocationType.OnEnter(WorldData, World, Me, character)
     End Sub
 
     Public ReadOnly Property HasItems() As Boolean Implements ILocation.HasItems

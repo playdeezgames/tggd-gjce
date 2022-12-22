@@ -39,7 +39,6 @@
         CreateDungeons(worldData, world)
         CreateLoveInterest(worldData, world)
         CreatePlayerCharacter(worldData, world)
-        SpawnGift(worldData, world) 'TODO: once a gift is craftable, don't spawn the gift
         Return world
     End Function
     Private Shared ReadOnly AllDungeons As IReadOnlyList(Of DungeonTypes) = New List(Of DungeonTypes) From {DungeonTypes.Paper, DungeonTypes.Cardboard, DungeonTypes.Tape, DungeonTypes.Ribbon, DungeonTypes.Macguffin}
@@ -76,13 +75,6 @@
         Route.Create(worldData, world, dungeonEntrance, Directions.Down, dungeonExit, RouteTypes.Stairs)
         Route.Create(worldData, world, dungeonExit, Directions.Down, dungeonEntrance, RouteTypes.Stairs)
     End Sub
-
-    Private Shared Sub SpawnGift(worldData As WorldData, world As World)
-        Dim location = RNG.FromEnumerable(world.Locations.Where(Function(x) x.LocationType = LocationTypes.House))
-        Dim gift As IItem = Item.Create(worldData, world, ItemTypes.Gift)
-        location.AddItem(gift)
-    End Sub
-
     Private Shared Sub CreateLoveInterest(worldData As WorldData, world As World)
         Dim location As ILocation = RNG.FromEnumerable(world.Locations.Where(Function(x) x.LocationType = LocationTypes.House))
         Character.Create(worldData, world, location, CharacterTypes.LoveInterest)
@@ -143,8 +135,9 @@
     End Sub
 
     Private Shared Sub CreatePlayerCharacter(worldData As WorldData, world As World)
-        Dim location As ILocation = RNG.FromEnumerable(world.Locations.Where(Function(x) x.LocationType = LocationTypes.House))
-        Dim playerCharacter = Character.Create(worldData, world, location, CharacterTypes.Protagonist)
+        'Dim location As ILocation = RNG.FromEnumerable(world.Locations.Where(Function(x) x.LocationType = LocationTypes.House))
+        Dim location As ILocation = RNG.FromEnumerable(world.Locations.Where(Function(x) x.LocationType = LocationTypes.Dungeon))
+        Dim playerCharacter = Character.Create(worldData, world, Location, CharacterTypes.Protagonist)
         world.PlayerCharacter = playerCharacter
     End Sub
 

@@ -16,7 +16,7 @@
         End Get
     End Property
 
-    Public Sub New(worldData As WorldData, world As World, fromLocationId As Integer, direction As Directions)
+    Public Sub New(worldData As WorldData, world As IWorld, fromLocationId As Integer, direction As Directions)
         MyBase.New(worldData, world)
         Me.Direction = direction
         Me.FromLocationId = fromLocationId
